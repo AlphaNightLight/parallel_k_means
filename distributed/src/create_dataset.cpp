@@ -2,7 +2,7 @@
 #include <random>
 #include <fstream>
 
-// #define DEBUG
+#define SHOW_DETAILS
 
 int main(int argc, char** argv)
 {
@@ -31,7 +31,7 @@ int main(int argc, char** argv)
 		seed = rd();
 	}
 
-	#ifdef DEBUG
+	#ifdef SHOW_DETAILS
 		std::cout << "n_points: " << n_points << ", n_dimensions: " << n_dimensions
 			 << ", lower_bound: " << lower_bound << ", upper_bound: " << upper_bound
 			 << ", seed: " << seed << std::endl;

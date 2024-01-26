@@ -54,7 +54,8 @@ namespace Utils
     std::vector<Observation> readPoints(const std::string path, unsigned int requested_points,
                                         unsigned int requested_dimensions, bool is_centroid = false);
 
-    void writePoints(const std::string path, const std::vector<Observation>& p, unsigned int n_clusters);
+    void writePoints(const std::string path, const std::vector<Observation> &points,
+                     const std::vector<Observation> &centroids);
 }
 
 #endif // __UTILS_H__

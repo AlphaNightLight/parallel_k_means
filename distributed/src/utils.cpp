@@ -49,7 +49,7 @@ std::vector<Observation> Utils::readPoints(const std::string path, unsigned int 
         requested_dimensions = n_dimensions;
     }
 
-    #ifdef DEBUG
+    #ifdef SHOW_DETAILS
         std::cout<< "Reading file " << path << std::endl;
     #endif
 
@@ -76,8 +76,8 @@ std::vector<Observation> Utils::readPoints(const std::string path, unsigned int 
 
 
 
-void Utils::writePoints(const std::string path, const std::vector<Observation>& p,
-                        unsigned int n_clusters)
+void Utils::writePoints(const std::string path, const std::vector<Observation> &points,
+                        const std::vector<Observation> &centroids)
 {
     std::ofstream fout;
     fout.open(path);
@@ -86,14 +86,25 @@ void Utils::writePoints(const std::string path, const std::vector<Observation>& 
         std::cerr << "Error opening file: " << path << std::endl;
     }
 
-    #ifdef DEBUG
+    #ifdef SHOW_DETAILS
         std::cout<< "Writing to file " << path << std::endl;
     #endif
 
     fout << "n_points,n_clusters,n_dimensions" << std::endl;
-    fout << p.size() << "," << n_clusters << "," << p.at(0).getFeatureSize() << std::endl;
+    fout << points.size() << "," << centroids.size() << "," << points.at(0).getFeatureSize() << std::endl;
 
-    for (const auto &point : p) {
+    fout << std::endl;
+    fout << "centroid,clusterID" << std::endl;
+    for (const auto &centroid : centroids) {
+        for (const auto &feature : centroid.getFeatures()) {
+            fout << feature << ",";
+        }
+        fout << centroid.getClusterID() << std::endl;
+    }
+
+    fout << std::endl;
+    fout << "point,clusterID" << std::endl;
+    for (const auto &point : points) {
         for (const auto &feature : point.getFeatures()) {
             fout << feature << ",";
         }

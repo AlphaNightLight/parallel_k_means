@@ -1,0 +1,66 @@
+#!/bin/bash
+# Job name
+#PBS -N parallel_comp__
+# Output files
+#PBS -o ./logs/outputs_compile.o
+#PBS -e ./logs/errors_compile.e
+# Queue name
+#PBS -q short_cpuQ
+# Set the maximum wall time
+#   PBS -l walltime=00:10:00
+#PBS -l walltime=00:00:30
+
+# Number of nodes, cpus, mpi processors and amount of memory
+#PBS -l select=1:ncpus=1:mem=1mb
+
+# Mail information
+#PBS -m abe
+#PBS -M alex.pegoraro@unitn.it
+
+start_time=$SECONDS
+
+
+
+# Modules for C and MPI
+module load gcc91
+module load mpich-3.2.1--gcc-9.1.0
+
+g++() {
+    g++-9.1.0 "$@"
+}
+g++ --version
+
+gcc() {
+    gcc-9.1.0 "$@"
+}
+gcc --version
+
+mpicxx --version
+
+# To check the architecture
+lscpu
+printf "\n"
+
+
+
+# Select the working directory
+cd /home/alex.pegoraro/parallel_final_project/distributed
+
+# Load the parameters
+source params.sh
+
+# This is the script to compile the codes
+make k_means_serial && printf "k_means_serial built successfully\n\n"
+make k_means_omp_static  && printf "k_means_omp_static built successfully\n\n"
+make k_means_omp_dynamic  && printf "k_means_omp_dynamic built successfully\n\n"
+make k_means_mpi  && printf "k_means_mpi built successfully\n\n"
+make k_means_mpi_asynch  && printf "k_means_mpi_asynch built successfully\n\n"
+make create_dataset  && printf "create_dataset built successfully\n\n"
+
+# Each code will be run apart by its own script
+
+
+
+end_time=$SECONDS
+(( elapsed_time = $end_time - $start_time))
+printf "compile.pbs took $elapsed_time s\n"

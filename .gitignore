@@ -1,11 +1,11 @@
-distributed/bin
 distributed/obj
+distributed/bin
+distributed/logs
 
 distributed/data
 distributed/out
 distributed/measures
 
 distributed/plots
-distributed/pbs
 
 .vscode

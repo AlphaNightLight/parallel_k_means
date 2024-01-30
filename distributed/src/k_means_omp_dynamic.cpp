@@ -16,7 +16,7 @@ double KMeans(std::vector<Observation> &points, std::vector<Observation> &centro
         std::cout << i <<std::endl;
     }
     
-    std::cout << "I'm the omp code!" << std::endl;
+    std::cout << "I'm the dynamic omp code!" << std::endl;
     return 0.0;
 }
 

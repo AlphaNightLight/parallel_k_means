@@ -1,18 +1,17 @@
 #!/bin/bash
 # Job name
-#PBS -N IntroPARCO_final_project_omp_strong
+#PBS -N parallel_serial
 # Output files
-#PBS -o ./pbs/outputs_omp_strong.o
-#PBS -e ./pbs/errors_omp_strong.e
+#PBS -o ./logs/outputs_serial.o
+#PBS -e ./logs/errors_serial.e
 # Queue name
 #PBS -q short_cpuQ
 # Set the maximum wall time
-#   PBS -l walltime=06:00:00
-#PBS -l walltime=00:05:00
+#   PBS -l walltime=01:00:00
+#PBS -l walltime=00:00:30
 
 # Number of nodes, cpus, mpi processors and amount of memory
-#   PBS -l select=1:ncpus=64:ompthreads=64:mem=1mb
-#PBS -l select=1:ncpus=4:ompthreads=4:mem=1mb
+#PBS -l select=1:ncpus=1:mem=1mb
 
 # Mail information
 #PBS -m abe
@@ -20,7 +19,9 @@
 
 start_time=$SECONDS
 
-# Modules for C
+
+
+# Modules for C and MPI
 module load gcc91
 
 g++() {
@@ -35,18 +36,23 @@ gcc --version
 
 # To check the architecture
 lscpu
+printf "\n"
+
+
 
 # Select the working directory
 cd /home/alex.pegoraro/parallel_final_project/distributed
 
 # Load the parameters
-source scripts/params.sh
+source params.sh
 
-# The code must be compiled apart running run_setup.pbs
+# The code must be compiled apart running compile.pbs
 
 # Run the code
-bash scripts/benchmark_omp_strong.sh
+./bin/k_means_serial.exe $DATA_FILE $N_POINTS $CENTROIDS_FILE $N_CENTROIDS $N_DIMENSIONS $OUT_SERIAL_FILE $MEASURES_SERIAL_FILE $EPOCHS $TOLERANCE
+
+
 
 end_time=$SECONDS
 (( elapsed_time = $end_time - $start_time))
-echo run_omp_strong.pbs took $elapsed_time s
+printf "run_serial.pbs took $elapsed_time s"

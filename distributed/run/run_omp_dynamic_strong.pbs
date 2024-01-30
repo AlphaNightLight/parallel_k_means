@@ -1,9 +1,9 @@
 #!/bin/bash
 # Job name
-#PBS -N IntroPARCO_final_project_omp_weak
+#PBS -N parallel_omp_ds
 # Output files
-#PBS -o ./pbs/outputs_omp_weak.o
-#PBS -e ./pbs/errors_omp_weak.e
+#PBS -o ./logs/outputs_omp_dynamic_strong.o
+#PBS -e ./logs/errors_omp_dynamic_strong.e
 # Queue name
 #PBS -q short_cpuQ
 # Set the maximum wall time
@@ -20,6 +20,8 @@
 
 start_time=$SECONDS
 
+
+
 # Modules for C
 module load gcc91
 
@@ -35,18 +37,30 @@ gcc --version
 
 # To check the architecture
 lscpu
+printf "\n"
+
+
 
 # Select the working directory
 cd /home/alex.pegoraro/parallel_final_project/distributed
 
 # Load the parameters
-source scripts/params.sh
+source params.sh
 
-# The code must be compiled apart running run_setup.pbs
+# The code must be compiled apart running compile.pbs
 
 # Run the code
-bash scripts/benchmark_omp_weak.sh
+for ((i = 1 ; i <= $MAX_OMP_THREADS ; i*=2))
+do
+    printf "### Round $i ###\n"
+    out_full_name=${OUT_OMP_DYNAMIC_STRONG_FILE::-4}
+    out_full_name=$out_full_name"_$i.csv"
+	export OMP_NUM_THREADS=$i; ./bin/k_means_omp_dynamic.exe $DATA_FILE $N_POINTS $CENTROIDS_FILE $N_CENTROIDS $N_DIMENSIONS $out_full_name $MEASURES_OMP_DYNAMIC_STRONG_FILE $EPOCHS $TOLERANCE
+    printf "\n"
+done
+
+
 
 end_time=$SECONDS
 (( elapsed_time = $end_time - $start_time))
-echo run_omp_weak.pbs took $elapsed_time s
+printf "run_omp_dynamic_strong.pbs took $elapsed_time s"

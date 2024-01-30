@@ -29,10 +29,14 @@ int main(int argc, char** argv)
     double execution_time;
     std::ofstream fout;
 
+    #ifdef _OPENMP
+        int num_threads = atoi(getenv("OMP_NUM_THREADS"));
+    #endif
+
     if (argc != 10) {
 		std::cout << "usage: " << argv[0] << " <dataset path> <number of datapoints> <centroids path> \
                      <number of clusters> <number of dimensions> <output path> \
-				     <measurements path> <epochs> <tolerance>" << std::endl;
+				     <measures path> <epochs> <tolerance>" << std::endl;
         return EXIT_FAILURE;
 	}
 
@@ -42,7 +46,7 @@ int main(int argc, char** argv)
     n_clusters = std::stod(argv[4]);
     n_dimensions = std::stod(argv[5]);
 
-    output_path = argv[6];;
+    output_path = argv[6];
     measures_path = argv[7];
     epochs = std::stod(argv[8]);
     tolerance = std::stof(argv[9]);
@@ -52,7 +56,11 @@ int main(int argc, char** argv)
 
     #ifdef SHOW_DETAILS
         std::cout << "Dimensions: " << n_dimensions << ", epochs: " << epochs
-                  << ", tolerance: " << tolerance << std::endl;
+                  << ", tolerance: " << tolerance;
+        #ifdef _OPENMP
+            std::cout << ", omp_num_threads: " << num_threads;
+        #endif
+        std::cout << std::endl;
         std::cout << points.size() << " points read from " << dataset_path << std::endl;
         std::cout << centroids.size() << " centroids read from " << centroids_path << std::endl;
     #endif
@@ -74,9 +82,15 @@ int main(int argc, char** argv)
 
     fout.open(measures_path, std::ios_base::app);
 
-    // Header structure: n_points,n_clusters,n_dimensions,execution_time
-    fout << n_points << "," << n_clusters << "," << n_dimensions << ","
-         << execution_time << std::endl;
+    #ifdef _OPENMP
+        // Header structure: omp_num_threads,n_points,n_clusters,n_dimensions,execution_time
+        fout << num_threads << "," << n_points << "," << n_clusters << "," << n_dimensions << ","
+             << execution_time << std::endl;
+    #else
+        // Header structure: n_points,n_clusters,n_dimensions,execution_time
+        fout << n_points << "," << n_clusters << "," << n_dimensions << ","
+             << execution_time << std::endl;
+    #endif
 
     // Note: in output files we print centroids.size() as we're interested in the actual number of
     // final clusters the program found, while in measure files we print n_clusters as we're

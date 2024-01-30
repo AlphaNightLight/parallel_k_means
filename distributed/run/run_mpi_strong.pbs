@@ -1,0 +1,69 @@
+#!/bin/bash
+# Job name
+#PBS -N parallel_mpi__s
+# Output files
+#PBS -o ./logs/outputs_mpi_strong.o
+#PBS -e ./logs/errors_mpi_strong.e
+# Queue name
+#PBS -q short_cpuQ
+# Set the maximum wall time
+#   PBS -l walltime=06:00:00
+#PBS -l walltime=00:05:00
+
+# Number of nodes, cpus, mpi processors and amount of memory
+#   PBS -l select=4:ncpus=64:mpiprocs=64:mem=1mb
+#PBS -l select=1:ncpus=4:mpiprocs=4:mem=1mb
+
+# Mail information
+#PBS -m abe
+#PBS -M alex.pegoraro@unitn.it
+
+start_time=$SECONDS
+
+
+
+# Modules for C and MPI
+module load gcc91
+module load mpich-3.2.1--gcc-9.1.0
+
+g++() {
+    g++-9.1.0 "$@"
+}
+g++ --version
+
+gcc() {
+    gcc-9.1.0 "$@"
+}
+gcc --version
+
+mpicxx --version
+
+# To check the architecture
+lscpu
+printf "\n"
+
+
+
+# Select the working directory
+cd /home/alex.pegoraro/parallel_final_project/distributed
+
+# Load the parameters
+source params.sh
+
+# The code must be compiled apart running compile.pbs
+
+# Run the code
+for ((i = 1 ; i <= $MAX_MPI_PROCS ; i*=2))
+do
+    printf "### Round $i ###\n"
+    out_full_name=${OUT_MPI_STRONG_FILE::-4}
+    out_full_name=$out_full_name"_$i.csv"
+	mpiexec -np $i ./bin/k_means_mpi.exe $DATA_FILE $N_POINTS $CENTROIDS_FILE $N_CENTROIDS $N_DIMENSIONS $out_full_name $MEASURES_MPI_STRONG_FILE $EPOCHS $TOLERANCE
+    printf "\n"
+done
+
+
+
+end_time=$SECONDS
+(( elapsed_time = $end_time - $start_time))
+printf "run_mpi_strong.pbs took $elapsed_time s"

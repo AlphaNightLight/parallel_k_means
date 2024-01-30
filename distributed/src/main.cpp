@@ -74,7 +74,7 @@ int main(int argc, char** argv)
 
     fout.open(measures_path, std::ios_base::app);
 
-    // Header structure: n_points, n_clusters, n_dimensions, execution_time
+    // Header structure: n_points,n_clusters,n_dimensions,execution_time
     fout << n_points << "," << n_clusters << "," << n_dimensions << ","
          << execution_time << std::endl;
 

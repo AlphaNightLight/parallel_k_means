@@ -1,0 +1,51 @@
+#!/bin/bash
+# Job name
+#PBS -N IntroPARCO_final_project_serial
+# Output files
+#PBS -o ./pbs/outputs_serial.o
+#PBS -e ./pbs/errors_serial.e
+# Queue name
+#PBS -q short_cpuQ
+# Set the maximum wall time
+#   PBS -l walltime=01:00:00
+#PBS -l walltime=00:00:30
+
+# Number of nodes, cpus, mpi processors and amount of memory
+#PBS -l select=1:ncpus=1:mem=1mb
+
+# Mail information
+#PBS -m abe
+#PBS -M alex.pegoraro@unitn.it
+
+start_time=$SECONDS
+
+# Modules for C and MPI
+module load gcc91
+
+g++() {
+    g++-9.1.0 "$@"
+}
+g++ --version
+
+gcc() {
+    gcc-9.1.0 "$@"
+}
+gcc --version
+
+# To check the architecture
+lscpu
+
+# Select the working directory
+cd /home/alex.pegoraro/parallel_final_project/distributed
+
+# Load the parameters
+source scripts/params.sh
+
+# The code must be compiled apart running run_setup.pbs
+
+# Run the code
+./bin/k_means_serial.exe $DATA_FILE $N_POINTS $CENTROIDS_FILE $N_CENTROIDS $N_DIMENSIONS $OUT_SERIAL_FILE $MEASURES_SERIAL_FILE $EPOCHS $TOLERANCE
+
+end_time=$SECONDS
+(( elapsed_time = $end_time - $start_time))
+echo run_serial.pbs took $elapsed_time s

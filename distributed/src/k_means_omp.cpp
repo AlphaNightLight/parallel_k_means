@@ -11,6 +11,11 @@
 double KMeans(std::vector<Observation> &points, std::vector<Observation> &centroids,
               unsigned int epochs, double tolerance)
 {
+    #pragma omp parallel for
+    for (size_t i = 0; i < 100; ++i) {
+        std::cout << i <<std::endl;
+    }
+    
     std::cout << "I'm the omp code!" << std::endl;
     return 0.0;
 }

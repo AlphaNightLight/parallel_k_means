@@ -1,0 +1,55 @@
+#!/bin/bash
+# Job name
+#PBS -N IntroPARCO_final_project_mpi_strong
+# Output files
+#PBS -o ./pbs/outputs_mpi_strong.o
+#PBS -e ./pbs/errors_mpi_strong.e
+# Queue name
+#PBS -q short_cpuQ
+# Set the maximum wall time
+#   PBS -l walltime=06:00:00
+#PBS -l walltime=00:05:00
+
+# Number of nodes, cpus, mpi processors and amount of memory
+#   PBS -l select=4:ncpus=64:mpiprocs=64:mem=1mb
+#PBS -l select=1:ncpus=4:mpiprocs=4:mem=1mb
+
+# Mail information
+#PBS -m abe
+#PBS -M alex.pegoraro@unitn.it
+
+start_time=$SECONDS
+
+# Modules for C and MPI
+module load gcc91
+module load mpich-3.2.1--gcc-9.1.0
+
+g++() {
+    g++-9.1.0 "$@"
+}
+g++ --version
+
+gcc() {
+    gcc-9.1.0 "$@"
+}
+gcc --version
+
+mpicxx --version
+
+# To check the architecture
+lscpu
+
+# Select the working directory
+cd /home/alex.pegoraro/parallel_final_project/distributed
+
+# Load the parameters
+source scripts/params.sh
+
+# The code must be compiled apart running run_setup.pbs
+
+# Run the code
+bash scripts/benchmark_mpi_strong.sh
+
+end_time=$SECONDS
+(( elapsed_time = $end_time - $start_time))
+echo run_mpi_strong.pbs took $elapsed_time s

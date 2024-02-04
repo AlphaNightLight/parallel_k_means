@@ -1,0 +1,66 @@
+#!/bin/bash
+# Job name
+#PBS -N parallel_omp_ds
+# Output files
+#PBS -o ./logs/outputs_omp_dynamic_strong.o
+#PBS -e ./logs/errors_omp_dynamic_strong.e
+# Queue name
+#PBS -q short_cpuQ
+# Set the maximum wall time
+#   PBS -l walltime=06:00:00
+#PBS -l walltime=00:05:00
+
+# Number of nodes, cpus, mpi processors and amount of memory
+#   PBS -l select=1:ncpus=64:ompthreads=64:mem=1mb
+#PBS -l select=1:ncpus=4:ompthreads=4:mem=1mb
+
+# Mail information
+#PBS -m abe
+#PBS -M alex.pegoraro@unitn.it
+
+start_time=$SECONDS
+
+
+
+# Modules for C
+module load gcc91
+
+g++() {
+    g++-9.1.0 "$@"
+}
+g++ --version
+
+gcc() {
+    gcc-9.1.0 "$@"
+}
+gcc --version
+
+# To check the architecture
+lscpu
+printf "\n"
+
+
+
+# Select the working directory
+cd /home/alex.pegoraro/parallel_final_project/distributed
+
+# Load the parameters
+source params.sh
+
+# The code must be compiled apart running compile.pbs
+
+# Run the code
+for ((i = 1 ; i <= $MAX_OMP_THREADS ; i*=2))
+do
+    printf "### Round $i ###\n"
+    out_full_name=${OUT_OMP_DYNAMIC_STRONG_FILE::-4}
+    out_full_name=$out_full_name"_$i.csv"
+	export OMP_NUM_THREADS=$i; ./bin/k_means_omp_dynamic.exe $DATA_FILE $N_POINTS $CENTROIDS_FILE $N_CENTROIDS $N_DIMENSIONS $out_full_name $MEASURES_OMP_DYNAMIC_STRONG_FILE $EPOCHS $TOLERANCE
+    printf "\n"
+done
+
+
+
+end_time=$SECONDS
+(( elapsed_time = $end_time - $start_time))
+printf "run_omp_dynamic_strong.pbs took $elapsed_time s"

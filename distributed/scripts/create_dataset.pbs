@@ -1,0 +1,63 @@
+#!/bin/bash
+# Job name
+#PBS -N parallel_cr_ds_
+# Output files
+#PBS -o ./logs/outputs_create_dataset.o
+#PBS -e ./logs/errors_create_dataset.e
+# Queue name
+#PBS -q short_cpuQ
+# Set the maximum wall time
+#   PBS -l walltime=00:10:00
+#PBS -l walltime=00:00:30
+
+# Number of nodes, cpus, mpi processors and amount of memory
+#PBS -l select=1:ncpus=1:mem=1mb
+
+# Mail information
+#PBS -m abe
+#PBS -M alex.pegoraro@unitn.it
+
+start_time=$SECONDS
+
+
+
+# Modules for C and MPI
+module load gcc91
+module load mpich-3.2.1--gcc-9.1.0
+
+g++() {
+    g++-9.1.0 "$@"
+}
+g++ --version
+
+gcc() {
+    gcc-9.1.0 "$@"
+}
+gcc --version
+
+mpicxx --version
+
+# To check the architecture
+lscpu
+printf "\n"
+
+
+
+# Select the working directory
+cd /home/alex.pegoraro/parallel_final_project/distributed
+
+# Load the parameters
+source params.sh
+
+# The code must be compiled apart running compile.pbs
+
+# Run the code
+(( WEAK_N_POINTS = $MAX_MPI_PROCS>$MAX_OMP_THREADS ? $N_POINTS*$MAX_MPI_PROCS : $N_POINTS*$MAX_OMP_THREADS ))
+./bin/create_dataset.exe $DATA_FILE $WEAK_N_POINTS $N_DIMENSIONS $LOWER_BOUND $UPPER_BOUND && printf "dataset created successfully\n\n"
+./bin/create_dataset.exe $CENTROIDS_FILE $N_CENTROIDS $N_DIMENSIONS $LOWER_BOUND $UPPER_BOUND && printf "centroids created successfully\n\n"
+
+
+
+end_time=$SECONDS
+(( elapsed_time = $end_time - $start_time))
+printf "create_dataset.pbs took $elapsed_time s\n"

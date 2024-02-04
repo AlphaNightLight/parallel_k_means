@@ -1,14 +1,14 @@
 #!/bin/bash
 # Job name
-#PBS -N parallel_cr_ds_
+#PBS -N parallel_cm_rs_
 # Output files
-#PBS -o ./logs/outputs_create_dataset.o
-#PBS -e ./logs/errors_create_dataset.e
+#PBS -o ./logs/outputs_compare_results.o
+#PBS -e ./logs/errors_compare_results.e
 # Queue name
 #PBS -q short_cpuQ
 # Set the maximum wall time
-#   PBS -l walltime=00:10:00
-#PBS -l walltime=00:00:30
+#   PBS -l walltime=00:20:00
+#PBS -l walltime=00:05:00
 
 # Number of nodes, cpus, mpi processors and amount of memory
 #PBS -l select=1:ncpus=1:mem=1mb
@@ -49,9 +49,7 @@ source params.sh
 # The code must be compiled apart running compile.pbs
 
 # Run the code
-(( WEAK_N_POINTS = $MAX_MPI_PROCS>$MAX_OMP_THREADS ? $N_POINTS*$MAX_MPI_PROCS : $N_POINTS*$MAX_OMP_THREADS ))
-./bin/create_dataset.exe $DATA_FILE $WEAK_N_POINTS $N_DIMENSIONS $LOWER_BOUND $UPPER_BOUND && printf "dataset created successfully\n\n"
-./bin/create_dataset.exe $CENTROIDS_FILE $N_CENTROIDS $N_DIMENSIONS $LOWER_BOUND $UPPER_BOUND && printf "centroids created successfully\n\n"
+./bin/compare_results.exe $COMPARE_BASE_FILE $COMPARE_FOLDER $COMPARE_OUT_FILE $TOLERANCE && printf "outputs compared successfully\n\n"
 
 
 

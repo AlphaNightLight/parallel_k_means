@@ -113,3 +113,73 @@ void Utils::writePoints(const std::string path, const std::vector<Observation> &
 
     fout.close();
 }
+
+
+
+bool Utils::readOutputs(const std::string path, int &n_points, int &n_clusters, int &n_dimensions,
+                    std::vector<Observation> &points, std::vector<Observation> &centroids)
+{
+    std::ifstream fin(path);
+    std::string line;
+    std::istringstream iss;
+    std::vector<double> features;
+    int cluster_id;
+
+    if (!fin.is_open()) {
+        std::cerr << "Error opening file: " << path << std::endl;
+        return false;
+    }
+
+    points.clear();
+    centroids.clear();
+
+    getline(fin, line); // First line ignored, as it's the header
+    getline(fin, line);
+
+    iss.str(line);
+    getline(iss, line, ',');
+    n_points = std::stod(line);
+    getline(iss, line, ',');
+    n_clusters = std::stod(line);
+    getline(iss, line, ',');
+    n_dimensions = std::stod(line);
+
+    getline(fin, line); // Two lines ignored, blank and second header
+    getline(fin, line);
+
+    for (size_t i = 0; i < n_clusters; ++i) {
+        getline(fin, line);
+        iss.str(line); iss.clear();
+        features.clear();
+
+        for (size_t j = 0; j < n_dimensions; ++j) {
+            getline(iss, line, ',');
+            features.emplace_back(std::stof(line));
+        }
+
+        getline(iss, line, ',');
+        cluster_id = std::stod(line);
+        centroids.emplace_back(features, cluster_id);
+    }
+
+    getline(fin, line); // Other wo lines ignored, blank and third header
+    getline(fin, line);
+
+    for (size_t i = 0; i < n_points; ++i) {
+        getline(fin, line);
+        iss.str(line); iss.clear();
+        features.clear();
+
+        for (size_t j = 0; j < n_dimensions; ++j) {
+            getline(iss, line, ',');
+            features.emplace_back(std::stof(line));
+        }
+
+        getline(iss, line, ',');
+        cluster_id = std::stod(line);
+        points.emplace_back(features, cluster_id);
+    }
+
+    fin.close();
+    return true;
+}

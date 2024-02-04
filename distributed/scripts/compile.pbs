@@ -56,6 +56,7 @@ make k_means_omp_dynamic  && printf "k_means_omp_dynamic built successfully\n\n"
 make k_means_mpi  && printf "k_means_mpi built successfully\n\n"
 make k_means_mpi_asynch  && printf "k_means_mpi_asynch built successfully\n\n"
 make create_dataset  && printf "create_dataset built successfully\n\n"
+make compare_results  && printf "compare_results built successfully\n\n"
 
 # Each code will be run apart by its own script
 

@@ -61,7 +61,7 @@ int main(int argc, char** argv)
 
     execution_time = KMeans(points, centroids, epochs, tolerance);
     // Please note: KMeans() modifies points and centroids, as they are passed by reference.
-
+    
 
 
     #ifdef SHOW_DETAILS

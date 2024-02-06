@@ -14,10 +14,11 @@ double KMeans(std::vector<Observation> &points, std::vector<Observation> &centro
     std::vector<std::vector<double>> cumulative(centroids.size(), std::vector<double>(fs, 0.0)); // cumulative sum of features for each cluster: [clusterID][featureID]
     
     std::vector<int> counter(centroids.size(), 0); // number of points in each cluster 
-    auto delta = 0.0;
+    
 
     for (size_t e = 0; e < epochs; ++e)
     {
+        auto delta = 0.0;
         auto moved = false;
         for (auto &p : points)
         {
@@ -51,7 +52,7 @@ double KMeans(std::vector<Observation> &points, std::vector<Observation> &centro
 
             for(size_t j = 0; j < fs; ++j)
             {
-                centroids[i].setFeatures(j, cumulative[i][j] / counter[i]);
+                centroids[i].setFeatures(j, counter[i] == 0 ? 0.0 : cumulative[i][j] / counter[i]);
 
                 counter[i] = 0;  // reset 
                 cumulative[i][j] = 0.0; // reset 

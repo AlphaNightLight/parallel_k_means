@@ -7,8 +7,6 @@ mkdir -p out
 mkdir -p measures
 
 mkdir -p plots
-mkdir -p plots/out
-mkdir -p plots/measures
 
 
 

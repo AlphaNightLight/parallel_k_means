@@ -38,7 +38,7 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const Observation &observation);
 };
 
-static double distance(const Point &p1, const Point &p2);
+double distance(const Point &p1, const Point &p2);
 std::ostream &operator<<(std::ostream &os, const Observation &observation);
 
 using ObservationsWithIterations = std::pair<std::vector<Observation>, int>;

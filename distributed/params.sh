@@ -17,6 +17,12 @@ export DATA_FILE=$data_folder/data.csv
 export CENTROIDS_FILE=$data_folder/centroids.csv
 
 out_folder=out
+export COMPARE_BASE_FILE=$out_folder/serial_out.csv
+export COMPARE_FOLDER=$out_folder
+export COMPARE_OUT_FILE=$out_folder/compare.txt
+
+
+
 export OUT_SERIAL_FILE=$out_folder/serial_out.csv
 
 export OUT_OMP_STATIC_STRONG_FILE=$out_folder/omp_static_strong_out.csv
@@ -28,6 +34,8 @@ export OUT_MPI_STRONG_FILE=$out_folder/mpi_strong_out.csv
 export OUT_MPI_WEAK_FILE=$out_folder/mpi_weak_out.csv
 export OUT_MPI_ASYNCH_STRONG_FILE=$out_folder/mpi_asynch_strong_out.csv
 export OUT_MPI_ASYNCH_WEAK_FILE=$out_folder/mpi_asynch_weak_out.csv
+
+
 
 measures_folder=measures
 export MEASURES_SERIAL_FILE=$measures_folder/serial_measures.csv

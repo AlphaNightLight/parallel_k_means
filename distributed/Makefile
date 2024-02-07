@@ -19,12 +19,12 @@ clean :
 clean_everything :
 	rm -rf $(OBJ_FOLDER)/* $(BIN_FOLDER)/* logs/* data/* out/* measures/* plots/*
 
-k_means_serial k_means_omp_static k_means_omp_dynamic k_means_mpi k_means_mpi_asynch create_dataset : % : $(BIN_FOLDER)/%.exe
+k_means_serial k_means_omp_static k_means_omp_dynamic k_means_mpi k_means_mpi_asynch create_dataset compare_results : % : $(BIN_FOLDER)/%.exe
 
 
 
 # OBJs
-$(OBJ_FOLDER)/point.o $(OBJ_FOLDER)/utils.o $(OBJ_FOLDER)/main_serial.o $(OBJ_FOLDER)/k_means_serial.o : $(OBJ_FOLDER)/%.o : $(SRC_FOLDER)/%.cpp
+$(OBJ_FOLDER)/point.o $(OBJ_FOLDER)/utils.o $(OBJ_FOLDER)/main_serial.o $(OBJ_FOLDER)/k_means_serial.o $(OBJ_FOLDER)/compare_results.o : $(OBJ_FOLDER)/%.o : $(SRC_FOLDER)/%.cpp
 	$(CC) -c $(CFLAGS) $^ -o $@
 
 $(OBJ_FOLDER)/k_means_omp_static.o $(OBJ_FOLDER)/k_means_omp_dynamic.o $(OBJ_FOLDER)/main_omp.o : $(OBJ_FOLDER)/%.o : $(SRC_FOLDER)/%.cpp
@@ -52,4 +52,7 @@ $(BIN_FOLDER)/k_means_mpi.exe $(BIN_FOLDER)/k_means_mpi_asynch.exe : $(BIN_FOLDE
 	$(MPI_CC) $(CFLAGS) $^ -o $@
 
 $(BIN_FOLDER)/create_dataset.exe : $(SRC_FOLDER)/create_dataset.cpp
+	$(CC) $(CFLAGS) $^ -o $@
+
+$(BIN_FOLDER)/compare_results.exe : $(shared_files) $(OBJ_FOLDER)/compare_results.o
 	$(CC) $(CFLAGS) $^ -o $@

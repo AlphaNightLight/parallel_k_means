@@ -21,48 +21,61 @@ double KMeans(std::vector<Observation> &points, std::vector<Observation> &centro
     std::vector<int> counter(n_clusters, 0); // number of points in each cluster
     Observation old_centroid;
 
-    for (auto &p : points) {
+    for (auto &p : points) 
+    {
         p.setClusterID(0);
     }
 
-    for (size_t e = 0; e < epochs; ++e) {
+    for (size_t e = 0; e < epochs; ++e) 
+    {
         double delta = 0.0;
 
-        for (size_t cid = 0; cid < n_clusters; ++cid) {
+        for (size_t cid = 0; cid < n_clusters; ++cid) 
+        {
             counter.at(cid) = 0;
         }
 
-        for (size_t cid = 0; cid < n_clusters; ++cid) {
-            for (size_t dm = 0; dm < n_dimensions; ++dm) {
+        for (size_t cid = 0; cid < n_clusters; ++cid) 
+        {
+            for (size_t dm = 0; dm < n_dimensions; ++dm) 
+            {
                 cumulative.at(cid).at(dm) = 0;
             }
         }
 
-        for (auto &p : points) {
+        for (auto &p : points) 
+        {
             double dist = distance(p.getPoint(), centroids.at( p.getClusterID() ));
-            for (const auto &c : centroids) {
+            for (const auto &c : centroids) 
+            {
                 const double newDist = distance(p.getPoint(), c.getPoint());
-                if (newDist < dist) {
+                if (newDist < dist) 
+                {
                     p.setClusterID( c.getClusterID() );
                     dist = newDist;
                 }
             }
 
             counter.at( p.getClusterID() ) += 1;
-            for (size_t dm = 0; dm < n_dimensions; ++dm) {
+            for (size_t dm = 0; dm < n_dimensions; ++dm) 
+            {
                 cumulative.at( p.getClusterID() ).at(dm) += p.getFeatures(dm);
             }
         }
 
 
 
-        for(auto &c : centroids) {
+        for(auto &c : centroids) 
+        {
             old_centroid = c;
             const int cid = c.getClusterID();
-            for(size_t dm = 0; dm < n_dimensions; ++dm) {
-                if (counter.at(cid) == 0) {
+            for(size_t dm = 0; dm < n_dimensions; ++dm) 
+            {
+                if (counter.at(cid) == 0) 
+                {
                     c.setFeatures(dm, 0.0);
-                } else {
+                } else 
+                {
                     double newValue = cumulative.at(cid).at(dm) / counter.at(cid);
                     c.setFeatures(dm, newValue);
                 }

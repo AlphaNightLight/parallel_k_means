@@ -1,71 +1,80 @@
 #include "../include/k_means.h"
+#include "../include/point.h"
+#include "../include/utils.h"
 
 #include <iostream>
 #include <vector>
+
 
 
 double KMeans(std::vector<Observation> &points, std::vector<Observation> &centroids,
               unsigned int epochs, double tolerance)
 {
     auto start_time = std::chrono::high_resolution_clock::now();
-  
-    auto fs = points[0].getFeatureSize();
 
-    std::vector<std::vector<double>> cumulative(centroids.size(), std::vector<double>(fs, 0.0)); // cumulative sum of features for each cluster: [clusterID][featureID]
-    
-    std::vector<int> counter(centroids.size(), 0); // number of points in each cluster 
-    
+    int n_points = points.size();
+    int n_dimensions = points.at(0).getFeatureSize();
+    int n_clusters = centroids.size();
 
-    for (size_t e = 0; e < epochs; ++e)
-    {
-        auto delta = 0.0;
-        auto moved = false;
-        for (auto &p : points)
-        {
-            double dist = std::numeric_limits<double>::max();
-            for (const auto &centroid : centroids)
-            {
-                const auto cid = centroid.getClusterID();
+    // cumulative sum of features for each cluster: [clusterID][featureID]
+    std::vector<std::vector<double>> cumulative(n_clusters, std::vector<double>(n_dimensions, 0.0));
+    std::vector<int> counter(n_clusters, 0); // number of points in each cluster
+    Observation old_centroid;
 
-                const auto newDist = distance(p.getPoint(), centroid.getPoint());
+    for (auto &p : points) {
+        p.setClusterID(0);
+    }
 
-                if (newDist < dist)
-                {
-                    p.setClusterID(cid);
+    for (size_t e = 0; e < epochs; ++e) {
+        double delta = 0.0;
+
+        for (size_t cid = 0; cid < n_clusters; ++cid) {
+            counter.at(cid) = 0;
+        }
+
+        for (size_t cid = 0; cid < n_clusters; ++cid) {
+            for (size_t dm = 0; dm < n_dimensions; ++dm) {
+                cumulative.at(cid).at(dm) = 0;
+            }
+        }
+
+        for (auto &p : points) {
+            double dist = distance(p.getPoint(), centroids.at( p.getClusterID() ));
+            for (const auto &c : centroids) {
+                const double newDist = distance(p.getPoint(), c.getPoint());
+                if (newDist < dist) {
+                    p.setClusterID( c.getClusterID() );
                     dist = newDist;
-                    for(size_t j = 0; j < fs; ++j)
-                    {
-                        cumulative[cid][j] += p.getFeatures(j); // update the counter when adding the pt at the cluster 
-                    }
-                    counter.at(cid)++;
-                    moved = true;
                 }
             }
-        }
 
-        if (!moved)
-            break;
-
-        for(size_t i = 0; i < centroids.size(); ++i)
-        {
-            auto old_centroid = centroids[i]; 
-
-            for(size_t j = 0; j < fs; ++j)
-            {
-                centroids[i].setFeatures(j, counter[i] == 0 ? 0.0 : cumulative[i][j] / counter[i]);
-
-                counter[i] = 0;  // reset 
-                cumulative[i][j] = 0.0; // reset 
+            counter.at( p.getClusterID() ) += 1;
+            for (size_t dm = 0; dm < n_dimensions; ++dm) {
+                cumulative.at( p.getClusterID() ).at(dm) += p.getFeatures(dm);
             }
-            delta += distance(centroids[i].getPoint(), old_centroid.getPoint());
         }
-        if(delta < tolerance)
-            break;
+
+
+
+        for(auto &c : centroids) {
+            old_centroid = c;
+            const int cid = c.getClusterID();
+            for(size_t dm = 0; dm < n_dimensions; ++dm) {
+                if (counter.at(cid) == 0) {
+                    c.setFeatures(dm, 0.0);
+                } else {
+                    double newValue = cumulative.at(cid).at(dm) / counter.at(cid);
+                    c.setFeatures(dm, newValue);
+                }
+            }
+            delta += distance(old_centroid.getPoint(),c.getPoint());
+        }
+
+        if (delta < tolerance) break;
     }
 
     auto end_time = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end_time - start_time;
-
     std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >( elapsed );
 
     return elapsed.count();

@@ -8,6 +8,7 @@
 #include <vector>
 #include <fstream>
 
+#define MASTER 0
 #define SHOW_DETAILS
 
 
@@ -36,7 +37,7 @@ int main(int argc, char** argv)
 
     double execution_time;
 
-    if (argc != 10 && my_rank == 0) {
+    if (argc != 10 && my_rank == MASTER) {
 		std::cout << "usage: " << argv[0] << " <dataset path> <number of datapoints> <centroids path> \
                      <number of clusters> <number of dimensions> <output path> \
 				     <measures path> <epochs> <tolerance>" << std::endl;
@@ -54,19 +55,27 @@ int main(int argc, char** argv)
     epochs = std::stod(argv[8]);
     tolerance = std::stof(argv[9]);
 
-    if (my_rank == 0) {
+    if (my_rank == MASTER) {
         points = Utils::readPoints(dataset_path,n_points,n_dimensions,false);
         centroids = Utils::readPoints(centroids_path,n_clusters,n_dimensions,true);
     }
 
     #ifdef SHOW_DETAILS
-        if (my_rank == 0) {
+        if (my_rank == MASTER) {
             std::cout << "Dimensions: " << n_dimensions << ", epochs: " << epochs
                       << ", tolerance: " << tolerance << ", mpi_size: " << size << std::endl;
             std::cout << points.size() << " points read from " << dataset_path << std::endl;
             std::cout << centroids.size() << " centroids read from " << centroids_path << std::endl;
         }
     #endif
+
+    if (points.size() % size != 0){
+        if(my_rank == MASTER){
+            std::cerr << "Error: n_points size not compatible with core number!" << std::endl;
+        }
+        MPI_Finalize();
+        return EXIT_FAILURE;
+    }
 
 
 
@@ -76,14 +85,14 @@ int main(int argc, char** argv)
 
 
     #ifdef SHOW_DETAILS
-        if (my_rank == 0) {
+        if (my_rank == MASTER) {
             std::cout << "The clustering function took " << execution_time << " seconds" << std::endl;
             std::cout << "Writing results in "  << output_path << " and time measurements in "
                       << measures_path << std::endl;
         }
     #endif
 
-    if (my_rank == 0) {
+    if (my_rank == MASTER) {
         Utils::writePoints(output_path, points, centroids);
         std::ofstream fout(measures_path, std::ios_base::app);
 

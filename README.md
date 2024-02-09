@@ -2,6 +2,10 @@
 
 Final Project for Introduction to Parallel Computing: Parallelization of K-Means clustering algorithm.
 
+## Disclamer: the serial submodule
+
+The *serial/* directory is the submodule of the Elia Zonta's KMeans project that we used as the starting point for this one. However, we changed a lot of things, so do not rely on it but consider the *distributed/* folder as the root. In fact, all the files we're going to describe belong to that folder.
+
 ## Files in this repository
 
 In this repository you will find the following files and folders:

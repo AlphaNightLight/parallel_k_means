@@ -13,7 +13,8 @@
 double KMeans(std::vector<Observation> &points, std::vector<Observation> &centroids,
               unsigned int epochs, double tolerance)
 {
-    auto start_time = std::chrono::high_resolution_clock::now();
+    double start_time, end_time;
+    start_time = omp_get_wtime();
 
     int n_points = points.size();
     int n_dimensions = points.at(0).getFeatureSize();
@@ -25,9 +26,9 @@ double KMeans(std::vector<Observation> &points, std::vector<Observation> &centro
     Observation old_centroid;
 
     #pragma omp parallel for schedule(dynamic, static_cast<int>(points.size()))
-    for (auto &p : points) 
+    for (size_t point = 0; point < n_points; ++point)
     {
-        p.setClusterID(0);
+        points.at(point).setClusterID(0);
     }
 
     for (size_t e = 0; e < epochs; ++e) 
@@ -50,32 +51,31 @@ double KMeans(std::vector<Observation> &points, std::vector<Observation> &centro
         }
 
         #pragma omp parallel for schedule(dynamic, static_cast<int>(points.size())) reduction(+:delta)
-        for (auto &p : points) 
+        for (size_t point = 0; point < n_points; ++point) 
         {
-            double dist = distance(p.getPoint(), centroids.at( p.getClusterID() ));
+            double dist = distance(points.at(point).getPoint(), centroids.at( points.at(point).getClusterID() ));
             for (const auto &c : centroids) 
             {
-                const double newDist = distance(p.getPoint(), c.getPoint());
+                const double newDist = distance(points.at(point).getPoint(), c.getPoint());
                 if (newDist < dist) 
                 {
-                    p.setClusterID( c.getClusterID() );
+                    points.at(point).setClusterID( c.getClusterID() );
                     dist = newDist;
                 }
             }
 
-            counter.at( p.getClusterID() ) += 1;
+            counter.at( points.at(point).getClusterID() ) += 1;
             for (size_t dm = 0; dm < n_dimensions; ++dm) 
             {
-                cumulative.at( p.getClusterID() ).at(dm) += p.getFeatures(dm);
+                cumulative.at( points.at(point).getClusterID() ).at(dm) += points.at(point).getFeatures(dm);
             }
         }
 
 
         #pragma omp parallel for schedule(dynamic, static_cast<int>(centroids.size())) reduction(+:delta)
-        for(auto &c : centroids) 
+        for(size_t cid = 0; cid < n_clusters; ++cid) 
         {
-            old_centroid = c;
-            const int cid = c.getClusterID();
+            old_centroid = centroids.at(cid);
 
             size_t dm;
             #pragma omp parallel for schedule(dynamic, dm)
@@ -83,24 +83,21 @@ double KMeans(std::vector<Observation> &points, std::vector<Observation> &centro
             {
                 if (counter.at(cid) == 0) 
                 {
-                    c.setFeatures(dm, 0.0);
+                    centroids.at(cid).setFeatures(dm, 0.0);
                 } else 
                 {
                     double newValue = cumulative.at(cid).at(dm) / counter.at(cid);
-                    c.setFeatures(dm, newValue);
+                    centroids.at(cid).setFeatures(dm, newValue);
                 }
             }
-            delta += distance(old_centroid.getPoint(),c.getPoint());
+            delta += distance(old_centroid.getPoint(),centroids.at(cid).getPoint());
         }
 
         if (delta < tolerance) break;
     }
 
-    auto end_time = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed = end_time - start_time;
-    std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >( elapsed );
-
-    return elapsed.count();
+    end_time = omp_get_wtime();
+    return end_time - start_time;
 }
 
 

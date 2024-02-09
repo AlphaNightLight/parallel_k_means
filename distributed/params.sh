@@ -1,10 +1,10 @@
-export N_POINTS=1024
-export N_CENTROIDS=8
-export N_DIMENSIONS=5
+export N_POINTS=65536
+export N_CENTROIDS=64
+export N_DIMENSIONS=8
 
 export MAX_OMP_THREADS=64
 export MAX_MPI_PROCS=256
-export EPOCHS=20
+export EPOCHS=128
 export TOLERANCE=0.001
 
 export LOWER_BOUND=-100.0

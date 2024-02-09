@@ -86,7 +86,7 @@ double KMeans(std::vector<Observation> &points, std::vector<Observation> &centro
 
     if(my_rank == MASTER) {
         for (size_t i = 0; i < n_points; ++i) {
-            int dest = i / size;
+            int dest = i / n_points_per_core;
             if (dest != MASTER) {
                 MPI_Isend(P[i], n_dimensions, MPI_DOUBLE, dest, 0, MPI_COMM_WORLD, myRequestMaster + i);
             }
@@ -109,7 +109,7 @@ double KMeans(std::vector<Observation> &points, std::vector<Observation> &centro
 
     if(my_rank == MASTER) {
         for (size_t i = 0; i < n_points; ++i) {
-            int dest = i / size;
+            int dest = i / n_points_per_core;
             if (dest != MASTER) {
                 MPI_Wait(myRequestMaster + i, myStatusMaster + i);
             }
@@ -195,7 +195,7 @@ double KMeans(std::vector<Observation> &points, std::vector<Observation> &centro
 
     if(my_rank == MASTER) {
         for (size_t i = 0; i < n_points; ++i) {
-            int src = i / size;
+            int src = i / n_points_per_core;
             if (src != MASTER) {
                 MPI_Irecv(P_cluster_ID + i, 1, MPI_DOUBLE, src, 0, MPI_COMM_WORLD, myRequestMaster + i);
             }
@@ -234,7 +234,7 @@ double KMeans(std::vector<Observation> &points, std::vector<Observation> &centro
 
     if(my_rank == MASTER) {
         for (size_t i = 0; i < n_points; ++i) {
-            int src = i / size;
+            int src = i / n_points_per_core;
             if (src != MASTER) {
                 MPI_Wait(myRequestMaster + i, myStatusMaster + i);
             }

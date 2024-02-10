@@ -76,6 +76,6 @@ In the *unitn hpc cluster*, do follow these steps:
 
 Note: if you run a new simulation without cleaning and set-upping the workspace, the outputs will be overwritten, but the measures will undergo an append, that may make them un-plottable.
 
-For any additional information, read *parallel_computing_final_report.pdf*.
+For any additional information, read *report_parallel.pdf*.
 
 *Alex Pegoraro*, *Elia Zonta*

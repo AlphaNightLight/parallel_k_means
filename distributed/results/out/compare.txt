@@ -1,0 +1,71 @@
+Base file: out/serial_out.csv
+n_points: 65536, n_clusters: 64, n_dimensions: 8, tolerance: 0.001
+Comparison with files in: out
+
+mpi_asynch_strong_out_1.csv: points OK, centroids OK
+mpi_asynch_strong_out_128.csv: points OK, centroids OK
+mpi_asynch_strong_out_16.csv: points OK, centroids OK
+mpi_asynch_strong_out_2.csv: points OK, centroids OK
+mpi_asynch_strong_out_256.csv: points OK, centroids OK
+mpi_asynch_strong_out_32.csv: points OK, centroids OK
+mpi_asynch_strong_out_4.csv: points OK, centroids OK
+mpi_asynch_strong_out_64.csv: points OK, centroids OK
+mpi_asynch_strong_out_8.csv: points OK, centroids OK
+mpi_asynch_weak_out_1.csv: LESS points
+mpi_asynch_weak_out_128.csv: MORE points, 64509 DIFFERENT points, 64 DIFFERENT centroids
+mpi_asynch_weak_out_16.csv: LESS points
+mpi_asynch_weak_out_2.csv: LESS points
+mpi_asynch_weak_out_256.csv: MORE points, 64510 DIFFERENT points, 64 DIFFERENT centroids
+mpi_asynch_weak_out_32.csv: LESS points
+mpi_asynch_weak_out_4.csv: LESS points
+mpi_asynch_weak_out_64.csv: 64543 DIFFERENT points, 64 DIFFERENT centroids
+mpi_asynch_weak_out_8.csv: LESS points
+mpi_strong_out_1.csv: points OK, centroids OK
+mpi_strong_out_128.csv: points OK, centroids OK
+mpi_strong_out_16.csv: points OK, centroids OK
+mpi_strong_out_2.csv: points OK, centroids OK
+mpi_strong_out_256.csv: points OK, centroids OK
+mpi_strong_out_32.csv: points OK, centroids OK
+mpi_strong_out_4.csv: points OK, centroids OK
+mpi_strong_out_64.csv: points OK, centroids OK
+mpi_strong_out_8.csv: points OK, centroids OK
+mpi_weak_out_1.csv: LESS points
+mpi_weak_out_128.csv: MORE points, 64511 DIFFERENT points, 64 DIFFERENT centroids
+mpi_weak_out_16.csv: LESS points
+mpi_weak_out_2.csv: LESS points
+mpi_weak_out_256.csv: MORE points, 64511 DIFFERENT points, 64 DIFFERENT centroids
+mpi_weak_out_32.csv: LESS points
+mpi_weak_out_4.csv: LESS points
+mpi_weak_out_64.csv: 64545 DIFFERENT points, 64 DIFFERENT centroids
+mpi_weak_out_8.csv: LESS points
+omp_dynamic_strong_out_1.csv: points OK, centroids OK
+omp_dynamic_strong_out_16.csv: points OK, centroids OK
+omp_dynamic_strong_out_2.csv: points OK, centroids OK
+omp_dynamic_strong_out_32.csv: points OK, centroids OK
+omp_dynamic_strong_out_4.csv: points OK, centroids OK
+omp_dynamic_strong_out_64.csv: points OK, centroids OK
+omp_dynamic_strong_out_8.csv: points OK, centroids OK
+omp_dynamic_weak_out_1.csv: LESS points
+omp_dynamic_weak_out_16.csv: LESS points
+omp_dynamic_weak_out_2.csv: LESS points
+omp_dynamic_weak_out_32.csv: LESS points
+omp_dynamic_weak_out_4.csv: LESS points
+omp_dynamic_weak_out_64.csv: 64545 DIFFERENT points, 64 DIFFERENT centroids
+omp_dynamic_weak_out_8.csv: LESS points
+omp_static_strong_out_1.csv: points OK, centroids OK
+omp_static_strong_out_16.csv: points OK, centroids OK
+omp_static_strong_out_2.csv: points OK, centroids OK
+omp_static_strong_out_32.csv: points OK, centroids OK
+omp_static_strong_out_4.csv: points OK, centroids OK
+omp_static_strong_out_64.csv: points OK, centroids OK
+omp_static_strong_out_8.csv: points OK, centroids OK
+omp_static_weak_out_1.csv: LESS points
+omp_static_weak_out_16.csv: LESS points
+omp_static_weak_out_2.csv: LESS points
+omp_static_weak_out_32.csv: LESS points
+omp_static_weak_out_4.csv: LESS points
+omp_static_weak_out_64.csv: 64545 DIFFERENT points, 64 DIFFERENT centroids
+omp_static_weak_out_8.csv: LESS points
+serial_out.csv: points OK, centroids OK
+
+No more files found in out

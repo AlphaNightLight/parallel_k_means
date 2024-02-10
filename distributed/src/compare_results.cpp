@@ -83,7 +83,7 @@ int main(int argc, char** argv)
             continue;
         }
         if (n_points_base > n_points_compare) {
-            fout << "LESS points, ";
+            fout << "LESS points" << std::endl;
             continue;
         } else if (n_points_base < n_points_compare) {
             fout << "MORE points, ";

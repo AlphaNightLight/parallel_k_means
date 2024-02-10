@@ -1,0 +1,77 @@
+g++-9.1.0 (GCC) 9.1.0
+Copyright (C) 2019 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+gcc-9.1.0 (GCC) 9.1.0
+Copyright (C) 2019 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+g++-9.1.0 (GCC) 9.1.0
+Copyright (C) 2019 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Architecture:          x86_64
+CPU op-mode(s):        32-bit, 64-bit
+Byte Order:            Little Endian
+CPU(s):                96
+On-line CPU(s) list:   0-95
+Thread(s) per core:    1
+Core(s) per socket:    24
+Socket(s):             4
+NUMA node(s):          4
+Vendor ID:             GenuineIntel
+CPU family:            6
+Model:                 85
+Model name:            Intel(R) Xeon(R) Gold 6252N CPU @ 2.30GHz
+Stepping:              7
+CPU MHz:               2300.000
+BogoMIPS:              4600.00
+Virtualization:        VT-x
+L1d cache:             32K
+L1i cache:             32K
+L2 cache:              1024K
+L3 cache:              36608K
+NUMA node0 CPU(s):     0-23
+NUMA node1 CPU(s):     24-47
+NUMA node2 CPU(s):     48-71
+NUMA node3 CPU(s):     72-95
+Flags:                 fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid dca sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch epb cat_l3 cdp_l3 invpcid_single intel_ppin intel_pt ssbd mba ibrs ibpb stibp ibrs_enhanced tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm cqm mpx rdt_a avx512f avx512dq rdseed adx smap clflushopt clwb avx512cd avx512bw avx512vl xsaveopt xsavec xgetbv1 cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local dtherm ida arat pln pts pku ospke avx512_vnni md_clear spec_ctrl intel_stibp flush_l1d arch_capabilities
+
+g++ -c -std=c++11 -O3  src/point.cpp -o obj/point.o
+g++ -c -std=c++11 -O3  src/utils.cpp -o obj/utils.o
+g++ -c -std=c++11 -O3  src/main_serial.cpp -o obj/main_serial.o
+g++ -c -std=c++11 -O3  src/k_means_serial.cpp -o obj/k_means_serial.o
+g++ -std=c++11 -O3  obj/point.o obj/utils.o obj/main_serial.o obj/k_means_serial.o -o bin/k_means_serial.exe
+k_means_serial built successfully
+
+g++ -c -std=c++11 -O3  -fopenmp src/main_omp.cpp -o obj/main_omp.o
+g++ -c -std=c++11 -O3  -fopenmp src/k_means_omp_static.cpp -o obj/k_means_omp_static.o
+g++ -std=c++11 -O3  -fopenmp obj/point.o obj/utils.o obj/main_omp.o obj/k_means_omp_static.o -o bin/k_means_omp_static.exe
+k_means_omp_static built successfully
+
+g++ -c -std=c++11 -O3  -fopenmp src/k_means_omp_dynamic.cpp -o obj/k_means_omp_dynamic.o
+g++ -std=c++11 -O3  -fopenmp obj/point.o obj/utils.o obj/main_omp.o obj/k_means_omp_dynamic.o -o bin/k_means_omp_dynamic.exe
+k_means_omp_dynamic built successfully
+
+mpicxx -c -std=c++11 -O3  src/point.cpp -o obj/point_mpi.o
+mpicxx -c -std=c++11 -O3  src/utils.cpp -o obj/utils_mpi.o
+mpicxx -c -std=c++11 -O3  src/main_mpi.cpp -o obj/main_mpi.o
+mpicxx -c -std=c++11 -O3  src/k_means_mpi.cpp -o obj/k_means_mpi.o
+mpicxx -std=c++11 -O3  obj/point_mpi.o obj/utils_mpi.o obj/main_mpi.o obj/k_means_mpi.o -o bin/k_means_mpi.exe
+k_means_mpi built successfully
+
+mpicxx -c -std=c++11 -O3  src/k_means_mpi_asynch.cpp -o obj/k_means_mpi_asynch.o
+mpicxx -std=c++11 -O3  obj/point_mpi.o obj/utils_mpi.o obj/main_mpi.o obj/k_means_mpi_asynch.o -o bin/k_means_mpi_asynch.exe
+k_means_mpi_asynch built successfully
+
+g++ -std=c++11 -O3  src/create_dataset.cpp -o bin/create_dataset.exe
+create_dataset built successfully
+
+g++ -c -std=c++11 -O3  src/compare_results.cpp -o obj/compare_results.o
+g++ -std=c++11 -O3  obj/point.o obj/utils.o obj/compare_results.o -o bin/compare_results.exe
+compare_results built successfully
+
+compile.pbs took 13 s

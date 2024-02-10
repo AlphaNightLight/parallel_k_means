@@ -1,0 +1,3 @@
+Please note: during the benchmarking the weak algorithms went out of time respect to the cluster requirements. So, we had to run them again on a reduced dataset (1024 points instaed of 65536) freshly generated. That's why they're outputs are different from strong ones.
+
+Note 2: to avoid to push too much data on github, here we present only the serial output and the compare.txt
